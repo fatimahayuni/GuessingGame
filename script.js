@@ -15,13 +15,22 @@
 // });
 
 // Create a random number
-const secretNumber = Math.trunc(Math.random() * 20) + 1;
+let secretNumber = Math.trunc(Math.random() * 20) + 1;
 
-// Select the number class in HTML to put the random number generated.
-document.querySelector('.number').textContent = secretNumber;
-
-// Establish a starting score of 20. This will decrease/increase later.
+// Establish a starting score of 20.
 let score = 20;
+
+// Establish the starting point for highest score set to 0
+let highScore = 0;
+
+// Function declaractions
+const displayMessage = function (message) {
+  document.querySelector('.message').textContent = message;
+};
+
+const displayScore = function (score) {
+  document.querySelector('.score').textContent = score;
+};
 
 // What happens when the CHECK button is pressed.
 document.querySelector('.check').addEventListener('click', function () {
@@ -30,37 +39,52 @@ document.querySelector('.check').addEventListener('click', function () {
 
   // SCENARIO 1: User enters nothing in the input:
   if (!guess) {
-    document.querySelector('.message').textContent =
-      '🤔 Put number between 1 to 20.';
+    displayMessage('🤔 Put number between 1 to 20.');
 
-    // SCENARIO 2: User enters something. It is the correct number:
+    // SCENARIO 2: User enters number more than 20. Out of range.
+  } else if (guess > 20) {
+    displayMessage('Please enter a number between 1 to 20.');
+
+    // SCENARIO 2: User enters something. It is the correct number. WIN!:
   } else if (guess === secretNumber) {
-    document.querySelector('.message').textContent = '🎉 Correct answer!';
-    // Print the score in the browser.
-    document.querySelector('.score').textContent = score;
+    displayMessage('🎉 Correct answer!');
 
-    // SCENARIO 3: User enters something. But the number is TOO LOW.
-  } else if (guess < secretNumber) {
-    if (score > 0) {
-      document.querySelector('.message').textContent = ' 📉 Too low...';
-      // The score will decrease by 1.
-      score--;
-      document.querySelector('.score').textContent = score;
-    } else {
-      document.querySelector('.message').textContent = '😵 You lost the game.';
-      document.querySelector('.score').textContent = 0;
+    // The correct number will appear in the white box
+    document.querySelector('.number').textContent = secretNumber;
+
+    // Print the score in the browser.
+    document.querySelector('body').style.backgroundColor = '#60b347';
+
+    document.querySelector('.number').style.width = '30rem';
+
+    if (score > highScore) {
+      highScore = score;
+      document.querySelector('.highscore').textContent = highScore;
     }
 
-    // SCENARIO 4: User enters something. But the number is TOO HIGH.
-  } else if (guess > secretNumber) {
+    // SCENARIO 3: User enters something. But the number is WRONG: high or low.
+  } else if (guess !== secretNumber) {
     if (score > 1) {
-      document.querySelector('.message').textContent = '📈 Terlalu tinggi...';
+      displayMessage(guess > secretNumber ? '📈 Too high' : ' 📉 Too low...');
+
       // The score will decrease by 1.
       score--;
-      document.querySelector('.score').textContent = score;
+      displayScore(score); // **
     } else {
-      document.querySelector('.message').textContent = '😵 You lost the game.';
-      document.querySelector('.score').textContent = 0;
+      displayMessage('😵 You lost the game.');
+      displayScore(0);
     }
   }
+});
+
+document.querySelector('.again').addEventListener('click', function () {
+  score = 20;
+  secretNumber = Math.trunc(Math.random() * 20) + 1;
+  displayMessage('Start guessing...');
+  displayScore(score);
+  document.querySelector('.number').textContent = '?';
+  document.querySelector('.guess').value = '';
+
+  document.querySelector('body').style.backgroundColor = '#222';
+  document.querySelector('.number').style.width = '15rem';
 });
