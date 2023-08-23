@@ -117,3 +117,19 @@ h1 {
 .label-score {
   margin-bottom: 2rem;
 }
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #222;
+  padding: 10px 20px;
+  text-align: right;
+}
+
+.footer-text {
+  font-size: 12px;
+  color: #777;
+}
+
+/* ... (existing CSS styles) ... */
